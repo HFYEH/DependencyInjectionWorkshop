@@ -12,6 +12,8 @@ namespace DependencyInjectionWorkshop.Models
 {
     public class AuthenticationService
     {
+        private ProfileDao _profileDao;
+
         public bool Verify(string accountId, string password, string otp)
         {
             var httpClient = new HttpClient() {BaseAddress = new Uri("http://joey.com/")};
@@ -24,7 +26,7 @@ namespace DependencyInjectionWorkshop.Models
             }
             
             // Get password from DB
-            var passwordFromDb = GetPasswordFromDb(accountId);
+            var passwordFromDb = _profileDao.GetPasswordFromDb(accountId);
 
             // Get hash
             var hashedPassword = GHashedPassword(password);
@@ -129,8 +131,11 @@ namespace DependencyInjectionWorkshop.Models
             var hashedPassword = hash.ToString();
             return hashedPassword;
         }
+    }
 
-        private static string GetPasswordFromDb(string accountId)
+    internal class ProfileDao
+    {
+        public string GetPasswordFromDb(string accountId)
         {
             string passwordFromDb;
             using (var connection = new SqlConnection("my connection string"))
