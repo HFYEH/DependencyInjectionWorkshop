@@ -27,10 +27,8 @@ namespace DependencyInjectionWorkshop.Models
 
         public bool Verify(string accountId, string password, string otp)
         {
-            var httpClient = new HttpClient() {BaseAddress = new Uri("http://joey.com/")};
-            
             // Check acount isLock
-            var isLocked = GetAccountIsLocked(accountId, httpClient);
+            var isLocked = GetAccountIsLocked(accountId, new HttpClient() {BaseAddress = new Uri("http://joey.com/")});
             if (isLocked)
             {
                 throw new FailedTooManyTimesException();
@@ -44,23 +42,23 @@ namespace DependencyInjectionWorkshop.Models
 
             // Get OTP
             // JsonConvert.SerializeObject(account)
-            var currentOtp = _otpService.GetCurrentOtp(accountId, httpClient);
+            var currentOtp = _otpService.GetCurrentOtp(accountId, new HttpClient() {BaseAddress = new Uri("http://joey.com/")});
 
             // Compare password
             if (currentOtp == otp && hashedPassword == passwordFromDb)
             {
                 // Reset fail count
-                ResetFailedCount(accountId, httpClient);
+                ResetFailedCount(accountId, new HttpClient() {BaseAddress = new Uri("http://joey.com/")});
 
                 return true;
             }
             else
             {
                 // Add fail count
-                AddFailedCount(accountId, httpClient);
+                AddFailedCount(accountId, new HttpClient() {BaseAddress = new Uri("http://joey.com/")});
 
                 // Add logger                
-                LogFailedCount(accountId, httpClient);
+                LogFailedCount(accountId, new HttpClient() {BaseAddress = new Uri("http://joey.com/")});
 
                 // Add notify
                 _slackAdapter.Notify(accountId);
