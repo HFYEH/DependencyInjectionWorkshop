@@ -19,6 +19,16 @@ namespace DependencyInjectionWorkshop.Models
         private readonly FailedCounter _failedCounter;
         private readonly NLogAdapter _nLogAdapter;
 
+        public AuthenticationService(ProfileDao profileDao, Sha256Adapter sha256Adapter, SlackAdapter slackAdapter, OtpService otpService, FailedCounter failedCounter, NLogAdapter nLogAdapter)
+        {
+            _profileDao = profileDao;
+            _sha256Adapter = sha256Adapter;
+            _slackAdapter = slackAdapter;
+            _otpService = otpService;
+            _failedCounter = failedCounter;
+            _nLogAdapter = nLogAdapter;
+        }
+        
         public AuthenticationService()
         {
             _profileDao = new ProfileDao();
@@ -75,7 +85,7 @@ namespace DependencyInjectionWorkshop.Models
         }
     }
 
-    internal class NLogAdapter
+    public class NLogAdapter
     {
         public void LogMessage(string message)
         {
@@ -84,7 +94,7 @@ namespace DependencyInjectionWorkshop.Models
         }
     }
 
-    internal class FailedCounter
+    public class FailedCounter
     {
         public void ResetFailedCount(string accountId)
         {
@@ -123,7 +133,7 @@ namespace DependencyInjectionWorkshop.Models
         }
     }
 
-    internal class OtpService
+    public class OtpService
     {
         public string GetCurrentOtp(string accountId)
         {
@@ -139,7 +149,7 @@ namespace DependencyInjectionWorkshop.Models
         }
     }
 
-    internal class SlackAdapter
+    public class SlackAdapter
     {
         public void Notify(string accountId)
         {
@@ -149,7 +159,7 @@ namespace DependencyInjectionWorkshop.Models
         }
     }
 
-    internal class Sha256Adapter
+    public class Sha256Adapter
     {
         public string GetHashedPassword(string password)
         {
@@ -166,7 +176,7 @@ namespace DependencyInjectionWorkshop.Models
         }
     }
 
-    internal class ProfileDao
+    public class ProfileDao
     {
         public string GetPasswordFromDb(string accountId)
         {
