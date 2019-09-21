@@ -65,7 +65,7 @@ namespace DependencyInjectionWorkshop.Models
 
                 var failedCount = _failedCounter.GetFailedCount(accountId);
                 // Add logger                
-                _logger.LogMessage($"accountID:{accountId} failed times:{failedCount}");
+                _logger.Info($"accountID:{accountId} failed times:{failedCount}");
 
                 // Add notify
                 _notification.Send(accountId);
