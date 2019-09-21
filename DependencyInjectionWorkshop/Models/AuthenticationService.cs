@@ -12,7 +12,7 @@ namespace DependencyInjectionWorkshop.Models
 {
     public class AuthenticationService
     {
-        public bool Verify(string accountID, string password, string otp)
+        public bool Verify(string accountId, string password, string otp)
         {
             var httpClient = new HttpClient() {BaseAddress = new Uri("http://joey.com/")};
             
@@ -28,7 +28,7 @@ namespace DependencyInjectionWorkshop.Models
             string passwordFromDb;
             using (var connection = new SqlConnection("my connection string"))
             {
-                passwordFromDb = connection.Query<string>("spGetUserPassword", new {Id = accountID},
+                passwordFromDb = connection.Query<string>("spGetUserPassword", new {Id = accountId},
                     commandType: CommandType.StoredProcedure).SingleOrDefault();
             }
 
@@ -49,7 +49,7 @@ namespace DependencyInjectionWorkshop.Models
             var response = httpClient.PostAsync("api/otps", new StringContent("account")).Result;
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"web api error, accountId:{accountID}");
+                throw new Exception($"web api error, accountId:{accountId}");
             }
 
             var currentOtp = response.Content.ReadAsStringAsync().Result;
@@ -71,9 +71,18 @@ namespace DependencyInjectionWorkshop.Models
                 var addFailedCountResponse =
                     httpClient.PostAsync("api/failedCounter/Add", new StringContent("account")).Result;
                 addFailedCountResponse.EnsureSuccessStatusCode();
+                
+                // Add logger                
+                var failedCountResponse =
+                    httpClient.PostAsync("api/failedCounter/GetFailedCount", new StringContent("account")).Result;
+                failedCountResponse.EnsureSuccessStatusCode();
+
+                var failedCount = failedCountResponse.Content.ReadAsStringAsync().Result;
+                var logger = NLog.LogManager.GetCurrentClassLogger();
+                logger.Info($"accountId:{accountId} failed times:{failedCount}");
 
                 // Add notify
-                string message = $"{accountID} try to login failed";
+                string message = $"{accountId} try to login failed";
                 var slackClient = new SlackClient("my api token");
                 slackClient.PostMessage(response1 => { }, "my channel", message, "my bot name");
 
