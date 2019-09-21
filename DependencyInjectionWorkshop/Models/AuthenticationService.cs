@@ -60,8 +60,10 @@ namespace DependencyInjectionWorkshop.Models
             {
                 // Add fail count
                 _failedCounter.AddFailedCount(accountId);
-                
-                LogFailedCount(accountId);
+
+                var failedCount = _failedCounter.GetFailedCount(accountId);
+                // Add logger                
+                _nLogAdapter.LogMessage($"accountID:{accountId} failed times:{failedCount}");
 
                 // Add notify
                 _slackAdapter.Notify(accountId);
@@ -70,13 +72,6 @@ namespace DependencyInjectionWorkshop.Models
             }
 
             //throw new NotImplementedException();
-        }
-
-        private void LogFailedCount(string accountId)
-        {
-            var failedCount = _failedCounter.GetFailedCount(accountId);
-            // Add logger                
-            _nLogAdapter.LogMessage($"accountID:{accountId} failed times:{failedCount}");
         }
     }
 
