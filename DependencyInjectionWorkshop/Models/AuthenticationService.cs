@@ -25,12 +25,7 @@ namespace DependencyInjectionWorkshop.Models
             }
             
             // Get password from DB
-            string passwordFromDb;
-            using (var connection = new SqlConnection("my connection string"))
-            {
-                passwordFromDb = connection.Query<string>("spGetUserPassword", new {Id = accountId},
-                    commandType: CommandType.StoredProcedure).SingleOrDefault();
-            }
+            var passwordFromDb = GetPasswordFromDb(accountId);
 
             // Get hash
             var crypt = new System.Security.Cryptography.SHA256Managed();
@@ -90,6 +85,18 @@ namespace DependencyInjectionWorkshop.Models
             }
 
             //throw new NotImplementedException();
+        }
+
+        private static string GetPasswordFromDb(string accountId)
+        {
+            string passwordFromDb;
+            using (var connection = new SqlConnection("my connection string"))
+            {
+                passwordFromDb = connection.Query<string>("spGetUserPassword", new {Id = accountId},
+                    commandType: CommandType.StoredProcedure).SingleOrDefault();
+            }
+
+            return passwordFromDb;
         }
     }
 
