@@ -11,7 +11,7 @@ namespace DependencyInjectionWorkshop.Models
         private readonly IFailedCounter _failedCounter;
         private readonly ILogger _logger;
 
-        public AuthenticationService(IProfile profile, IHash hash, INotification notification, IOtpService otpService, IFailedCounter failedCounter, ILogger logger)
+        public AuthenticationService(IFailedCounter failedCounter, ILogger logger, IOtpService otpService, IProfile profile, IHash hash, INotification notification)
         {
             _profile = profile;
             _hash = hash;
