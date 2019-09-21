@@ -32,14 +32,7 @@ namespace DependencyInjectionWorkshop.Models
 
             // Get OTP
             // JsonConvert.SerializeObject(account)
-            var response = httpClient.PostAsync("api/otps", new StringContent("account")).Result;
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"web api error, accountId:{accountId}");
-            }
-
-            var currentOtp = response.Content.ReadAsStringAsync().Result;
-
+            var currentOtp = GetCurrentOtp(accountId, httpClient);
 
             // Compare password
             if (currentOtp == otp && hashedPassword == passwordFromDb)
@@ -76,6 +69,18 @@ namespace DependencyInjectionWorkshop.Models
             }
 
             //throw new NotImplementedException();
+        }
+
+        private static string GetCurrentOtp(string accountId, HttpClient httpClient)
+        {
+            var response = httpClient.PostAsync("api/otps", new StringContent("account")).Result;
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"web api error, accountId:{accountId}");
+            }
+
+            var currentOtp = response.Content.ReadAsStringAsync().Result;
+            return currentOtp;
         }
 
         private static string GHashedPassword(string password)
