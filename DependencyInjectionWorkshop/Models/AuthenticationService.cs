@@ -12,14 +12,14 @@ namespace DependencyInjectionWorkshop.Models
 {
     public class AuthenticationService
     {
-        private readonly ProfileDao _profileDao;
+        private readonly IProfile _profileDao;
         private readonly Sha256Adapter _sha256Adapter;
         private readonly SlackAdapter _slackAdapter;
         private readonly OtpService _otpService;
         private readonly FailedCounter _failedCounter;
         private readonly NLogAdapter _nLogAdapter;
 
-        public AuthenticationService(ProfileDao profileDao, Sha256Adapter sha256Adapter, SlackAdapter slackAdapter, OtpService otpService, FailedCounter failedCounter, NLogAdapter nLogAdapter)
+        public AuthenticationService(IProfile profileDao, Sha256Adapter sha256Adapter, SlackAdapter slackAdapter, OtpService otpService, FailedCounter failedCounter, NLogAdapter nLogAdapter)
         {
             _profileDao = profileDao;
             _sha256Adapter = sha256Adapter;
@@ -49,7 +49,7 @@ namespace DependencyInjectionWorkshop.Models
             }
 
             // Get password from DB
-            var passwordFromDb = _profileDao.GetPasswordFromDb(accountId);
+            var passwordFromDb = _profileDao.GetPassword(accountId);
 
             // Get hash
             var hashedPassword = _sha256Adapter.GetHashedPassword(password);
@@ -176,9 +176,14 @@ namespace DependencyInjectionWorkshop.Models
         }
     }
 
-    public class ProfileDao
+    public interface IProfile
     {
-        public string GetPasswordFromDb(string accountId)
+        string GetPassword(string accountId);
+    }
+
+    public class ProfileDao : IProfile
+    {
+        public string GetPassword(string accountId)
         {
             string passwordFromDb;
             using (var connection = new SqlConnection("my connection string"))
