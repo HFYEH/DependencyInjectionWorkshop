@@ -80,6 +80,7 @@
     <Compile Include="Models\FailedTooManyTimesException.cs" />
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Models\NLogAdapter.cs" />
+    <Compile Include="Models\NotificationDecorator.cs" />
     <Compile Include="Models\OtpService.cs" />
     <Compile Include="Models\ProfileDao.cs" />
     <Compile Include="Models\Sha256Adapter.cs" />
