@@ -18,17 +18,24 @@ namespace MyConsole
 
         public void Intercept(IInvocation invocation)
         {
-            var currentUser = _context.GetCurrentUser();
-            var parameters = string.Join("|", invocation.Arguments.Select(x => (x ?? "").ToString()));
+            if (!(Attribute.GetCustomAttribute(invocation.Method, typeof(AuditLogAttribute)) is AuditLogAttribute
+                auditLogAttribute))
+            {
+                invocation.Proceed();
+            }
+            else
+            {
+                var currentUser = _context.GetCurrentUser();
+                var parameters = string.Join("|", invocation.Arguments.Select(x => (x ?? "").ToString()));
+                _logger.Info($"user:{currentUser.Name} invoke with parameters:{parameters}");
+                invocation.Proceed();
+                var returnValue = invocation.ReturnValue;
+                _logger.Info(returnValue.ToString());k
+            }
 
-            _logger.Info($"user:{currentUser.Name} invoke with parameters:{parameters}");
-
-            invocation.Proceed();
-
-            var returnValue = invocation.ReturnValue; 
-            _logger.Info(returnValue.ToString());
         }
     }
+
     internal class AuditLogDecorator : AuthenticationBaseDecorator
     {
         private readonly IContext _context;
