@@ -31,13 +31,6 @@ namespace DependencyInjectionWorkshop.Models
 
         public bool Verify(string accountId, string password, string otp)
         {
-            // Check acount isLock
-            var isLocked = _failedCounter.GetAccountIsLocked(accountId);
-            if (isLocked)
-            {
-                throw new FailedTooManyTimesException();
-            }
-
             // Get password from DB
             var passwordFromDb = _profile.GetPassword(accountId);
 
@@ -68,5 +61,13 @@ namespace DependencyInjectionWorkshop.Models
             //throw new NotImplementedException();
         }
 
+        private void CheckAccountIsLocked(string accountId)
+        {
+            var isLocked = _failedCounter.GetAccountIsLocked(accountId);
+            if (isLocked)
+            {
+                throw new FailedTooManyTimesException();
+            }
+        }
     }
 }
