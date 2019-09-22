@@ -83,6 +83,7 @@
     <Compile Include="Models\IAuthentication.cs" />
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Models\LogFailedCountDecorator.cs" />
+    <Compile Include="Models\LogMethodInfoDecorator.cs" />
     <Compile Include="Models\NLogAdapter.cs" />
     <Compile Include="Models\NotificationDecorator.cs" />
     <Compile Include="Models\OtpService.cs" />

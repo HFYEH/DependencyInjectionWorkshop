@@ -35,6 +35,7 @@ namespace MyConsole
             builder.RegisterDecorator<NotificationDecorator, IAuthentication>();
             builder.RegisterDecorator<FailedCounterDecorator, IAuthentication>();
             builder.RegisterDecorator<LogFailedCountDecorator, IAuthentication>();
+            builder.RegisterDecorator<LogMethodInfoDecorator, IAuthentication>();
 
             //_authentication = new NotificationDecorator(_authentication, _notification);
             //_authentication = new FailedCounterDecorator(_authentication, _failedCounter);
