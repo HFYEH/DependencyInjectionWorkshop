@@ -14,6 +14,7 @@ namespace DependencyInjectionWorkshop.Models
         private readonly IOtpService _otpService;
         private readonly IFailedCounter _failedCounter;
         private readonly ILogger _logger;
+        //private FailedCounterDecorator _failedCounterDecorator;
 
         public AuthenticationService(IFailedCounter failedCounter, ILogger logger, IOtpService otpService, IProfile profile, IHash hash)
         {
@@ -55,9 +56,6 @@ namespace DependencyInjectionWorkshop.Models
             // Compare password
             if (currentOtp == otp && hashedPassword == passwordFromDb)
             {
-                // Reset fail count
-                _failedCounter.ResetFailedCount(accountId);
-
                 return true;
             }
             else
@@ -74,5 +72,6 @@ namespace DependencyInjectionWorkshop.Models
 
             //throw new NotImplementedException();
         }
+
     }
 }
