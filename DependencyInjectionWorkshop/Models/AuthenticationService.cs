@@ -2,11 +2,6 @@
 
 namespace DependencyInjectionWorkshop.Models
 {
-    public interface IAuthentication
-    {
-        bool Verify(string accountId, string password, string otp);
-    }
-
     public class AuthenticationService : IAuthentication
     {
         private readonly IProfile _profile;
@@ -61,10 +56,10 @@ namespace DependencyInjectionWorkshop.Models
             else
             {
                 // Add fail count
-                _failedCounter.AddFailedCount(accountId);
+                //_failedCounter.AddFailedCount(accountId);
 
                 var failedCount = _failedCounter.GetFailedCount(accountId);
-                // Add logger                
+                // Add logger
                 _logger.Info($"accountID:{accountId} failed times:{failedCount}");
 
                 return false;
