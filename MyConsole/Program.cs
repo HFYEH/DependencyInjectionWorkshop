@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using DependencyInjectionWorkshop.Models;
+using Autofac.Extras.DynamicProxy;
+using Castle.DynamicProxy;
 
 namespace MyConsole
 {
@@ -37,9 +39,13 @@ namespace MyConsole
             builder.RegisterType<FakeLogger>().As<ILogger>();
             builder.RegisterType<FakeSlack>().As<INotification>();
             builder.RegisterType<FakeFailedCounter>().As<IFailedCounter>();
-            builder.RegisterType<AuthenticationService>().As<IAuthentication>();
+            // builder.RegisterType<AuthenticationService>().As<IAuthentication>();
+            builder.RegisterType<AuthenticationService>().As<IAuthentication>()
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(AuditLogInterceptor));
             
             builder.RegisterType<MyContext>().As<IContext>().SingleInstance();
+            builder.RegisterType<AuditLogInterceptor>();
             
             builder.RegisterDecorator<NotificationDecorator, IAuthentication>();
             builder.RegisterDecorator<FailedCounterDecorator, IAuthentication>();
